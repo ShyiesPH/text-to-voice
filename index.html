@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        
+    </head>
+    <title>Text to Voice </title>
+</head>
+<body>
+    <div id="console"></div>
+    
+    <script src="artyom.js"></script>
+    <script src="artyom.windows.js"></script>
+    
+    <script src="artyom.window.min.js"></script>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+
+const artyom = new Artyom();
+
+// Add a single command
+var commandHello = {
+    indexes:["hello","good morning","hey"], // These spoken words will trigger the execution of the command
+    action:function(){ // Action to be executed when a index match with spoken word
+        artyom.say("Hey buddy ! How are you today?");
+    }
+};
+
+artyom.addCommands(commandHello); // Add the command with addCommands method. Now
+
+// Or add multiple commands at time
+var myGroup = [
+    {
+        description:"If my database contains the name of a person say something",
+        smart:true, // a Smart command allow you to use wildcard in order to retrieve words that the user should say
+        // Ways to trigger the command with the voice
+        indexes:["Do you know who is *","I don't know who is *","Is * a good person"],
+        // Do something when the commands is triggered
+        action:function(i,wildcard){
+            var database = ["Carlos","Bruce","David","Joseph","Kenny"];
+
+            //If the command "is xxx a good person" is triggered do, else
+            if(i == 2){
+                if(database.indexOf(wildcard.trim())){
+                    artyom.say("I'm a machine, I dont know what is a feeling");
+                }else{
+                    artyom.say("I don't know who is " + wildcard + " and i cannot say if is a good person");
+                }
+            }else{
+                if(database.indexOf(wildcard.trim())){
+                    artyom.say("Of course i know who is "+ wildcard + ". A really good person");
+                }else{
+                    artyom.say("My database is not big enough, I don't know who is " + wildcard);
+                }
+            }
+        }
+    },
+    {
+        indexes:["What time is it","Is too late"],
+        action:function(i){ // var i returns the index of the recognized command in the previous array
+            if(i == 0){
+                aFunctionThatSaysTheTime(new Date());
+            }else if(i == 1){
+                artyom.say("Never is too late to do something my friend !");
+            }
+        }
+    }
+];
+
+artyom.addCommands(myGroup);
+       /* const artyom = new Artyom();
+
+        artyom.addCommands([
+            {
+            indexes:["Hello","Hi","Hey"],
+            action: () => {
+                artyom.say("Hello! What can i do for you");
+
+            }
+        },
+        {
+            indexes: ["Shutdown"],
+            action: (i, wildcard) => {
+                artyom.fatality().then(() => {
+                    console.log("Artyom successfully Stoped");
+                });
+            }
+        }
+    ]);
+
+        artyom.initialize({
+            lang: "en-GB",
+            continous: true,
+            soundex: true,
+            debug: true,
+            executionKeyword: "and do it now",
+            listen: true
+        }).then( () => {
+            console.log("Artyom has been successfully initialized");
+            $("#console").append("Please speak to execute command");
+        }).catch(err => {
+            console.log("Artyom couldn't be initialized", err);
+            $("#console").append("Please speak to execute command");
+
+        });
+
+
+
+*/
+    </script>
+</body>
+</html>
